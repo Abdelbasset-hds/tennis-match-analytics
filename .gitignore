@@ -212,3 +212,5 @@ notebook/runs/detect/predict*
 notebook/*.pt
 
 models/
+output_video/
+yolov8x.pt
