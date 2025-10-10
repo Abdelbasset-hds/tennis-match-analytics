@@ -3,7 +3,7 @@ import cv2
 import pickle
 import sys
 sys.path.append('../')
-from utils.bbox_utils import center_of_the_box, calc_distance
+from utils.bbox_utils import center_of_the_box, calc_distance ,get_min_distances_players_keycourt
 
 class Player_tracker :
     def __init__(self,model_path):
@@ -19,15 +19,7 @@ class Player_tracker :
         return filtre_player_detection
 
     def filter_players(self,court_points,player_dict):
-        distance = []
-        for id,bbox in player_dict.items() : 
-            min_distance = float('inf')
-            for i in range(0,len(court_points),2) :
-                court_point = (court_points[i],court_points[i+1])
-                dist = calc_distance(court_point,center_of_the_box(bbox))
-                if dist < min_distance :
-                    min_distance = dist
-            distance.append((id,min_distance))
+        distance = get_min_distances_players_keycourt(court_points,player_dict)
         distance.sort(key=lambda x : x[0])
         player_chosen = [distance[0][0],distance[1][0]]
         return player_chosen
