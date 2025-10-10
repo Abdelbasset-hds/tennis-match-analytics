@@ -1,3 +1,4 @@
+from utils.bbox_utils import center_of_the_box
 from ultralytics import YOLO
 import cv2
 import pickle
@@ -46,8 +47,8 @@ class Ball_tracker :
         output = list()
         for frame,ball in zip(video_frame,ball_detections) :
             for ball_id , box in ball.items() :
-                x1,y1,x2,y2 = map(int,box)
-                cv2.putText(frame,f'ball id : {ball_id}',(int(x1),int(y1-6)),cv2.FONT_HERSHEY_SIMPLEX,0.9,(0,255,0),2)
-                cv2.rectangle(frame,(x1,y1),(x2,y2),(0,255,0),3)
+                x,y = map(int,center_of_the_box(box))
+                cv2.putText(frame,f'ball id : {ball_id}',(x,y-8),cv2.FONT_HERSHEY_SIMPLEX,0.6,(0,255,0),2)
+                cv2.circle(frame,(x,y),5,(0,255,0),2)
             output.append(frame)
         return output
