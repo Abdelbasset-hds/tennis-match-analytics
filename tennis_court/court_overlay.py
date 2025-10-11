@@ -24,7 +24,6 @@ class CourtOverlay :
         tennis_court = cv2.imread('data/tennis_court.jpg')
         tennis_court = cv2.rotate(tennis_court,cv2.ROTATE_90_CLOCKWISE)
         output = list()
-        ball_position_motion_blure = list()
         for frame,position,players in zip(frames,ball_positions,player_liste) :        
             court_img = tennis_court.copy()
             values = list(players.values())
@@ -34,9 +33,7 @@ class CourtOverlay :
                 self.draw_player(court_img,player_position)
             ball_position = position.get(1)
             ball_position = center_of_the_box(ball_position)
-            ball_position_motion_blure.append(ball_position)
             self.draw_ball(court_img,ball_position)
-            court_img = self.add_motion_blure(court_img,ball_position_motion_blure)
             result = combin_frames(frame,court_img)
             output.append(result)
         return output
@@ -44,13 +41,5 @@ class CourtOverlay :
     def draw_player(self,frame,player_position) :
         x,y = self.map_point(player_position)
         cv2.circle(frame,(int(x),int(y)),3,(0,0,255),-1)
-
-    def add_motion_blure(self,frame,ball_position):
-        for i ,(x,y) in enumerate(reversed(ball_position[-5:])) :
-            overlay = frame.copy()
-            cv2.circle(overlay,(int(x),int(y)+60),2,(0,255,0),-1)
-            alpha = 1/(i+1)
-            result = cv2.addWeighted(frame,1-alpha,overlay,alpha,0)
-        return result
 
 

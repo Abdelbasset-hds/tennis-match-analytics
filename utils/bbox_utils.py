@@ -1,4 +1,5 @@
 from math import sqrt
+import numpy as np
 
 def center_of_the_box(box) :
     x1 , y1 , x2 , y2 = box
@@ -7,7 +8,7 @@ def center_of_the_box(box) :
     return (x_center,y_center)
 
 def calc_distance(p1,p2):
-    return sqrt(((p1[0]+p2[0])**2)+((p1[1]+p2[1])**2))
+    return sqrt(((p1[0]-p2[0])**2)+((p1[1]-p2[1])**2))
 
 def get_min_distance_player_keycourt(court_points,id,bbox): 
     min_distance = float('inf')
@@ -37,3 +38,12 @@ def get_closest_keypoint_index(court_points,bbox):
 
 def get_foot_position(bbox) :
     return((bbox[0]+bbox[2])/2,bbox[3])
+
+def calc_distance_meters(p1,p2):
+     dist_pixel = calc_distance(p1,p2)
+     dst_key_point = np.load("tracker_stubs/dst_key_point.npy")
+     corner1 = dst_key_point[0]
+     corner2 = dst_key_point[1]
+     dist_between_corner = calc_distance(corner1,corner2)
+     distance = dist_pixel * 10.97 / dist_between_corner
+     return distance
